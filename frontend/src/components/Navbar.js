@@ -250,8 +250,8 @@ const Navbar = () => {
     }
   
     try {
-      // Enable Keplr for a specific chain (e.g., Cosmos Hub)
-      const chainId = 'injective-888';
+      // Enable Keplr for a specific chain
+      const chainId = 'cosmoshub-4';
       await window.keplr.enable(chainId);
   
       // Get the offline signer and accounts
@@ -282,11 +282,11 @@ const Navbar = () => {
       <NavbarContainer>
         <Logo to="/">
           {/* Use a text fallback instead of the image to avoid potential image loading issues */}
-          <span>iAgent Arena</span>
+          <span>AgentBattle.space</span>
         </Logo>
         
         <NavLinks>
-          <NavLink to="/" $isActive={location.pathname === '/'}>
+          <NavLink to="/demo" $isActive={location.pathname === '/demo'}>
             <FaHome /> Dashboard
           </NavLink>
           <NavLink to="/trading" $isActive={location.pathname === '/trading'}>
@@ -373,7 +373,7 @@ const Navbar = () => {
     return (
       <NavbarContainer>
         <Logo to="/">
-          <span>iAgent Arena</span>
+          <span>AgentBattle.space</span>
         </Logo>
         <div style={{ color: 'red', padding: '0 1rem' }}>
           Error loading navigation. Please refresh the page.

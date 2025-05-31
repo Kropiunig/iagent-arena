@@ -9,6 +9,7 @@ import Dashboard from './components/Dashboard';
 import AgentProfile from './components/AgentProfile';
 import FamilyTree from './components/FamilyTree';
 import AgentBreeding from './components/AgentBreeding';
+import LandingPage from './components/LandingPage';
 
 // Styles
 import GlobalStyle from './styles/GlobalStyle';
@@ -23,7 +24,7 @@ const BasicContent = () => (
     maxWidth: '800px',
     margin: '0 auto'
   }}>
-    <h1>AI Agent Trading Arena</h1>
+    <h1>AgentBattle.space</h1>
     <p>Debug mode is active. The application is running with minimal components to identify issues.</p>
     
     <div style={{ 
@@ -80,7 +81,7 @@ function App() {
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text'
           }}>
-            AI Agent Trading Arena
+            AgentBattle.space
           </h1>
           <p>Loading application...</p>
         </div>
@@ -93,17 +94,43 @@ function App() {
       <ThemeProvider theme={darkTheme}>
         <GlobalStyle />
         <Router>
-          <div className="app-container">
-            <Navbar />
-            <GlobalStats />
-            <Routes>
-              <Route path="/" element={<Dashboard setSelectedAgent={setSelectedAgent} />} />
-              <Route path="/agent/:id" element={<AgentProfile selectedAgent={selectedAgent} />} />
-              <Route path="/family-tree" element={<FamilyTree setSelectedAgent={setSelectedAgent} />} />
-              <Route path="/breeding" element={<AgentBreeding />} />
-              <Route path="*" element={<BasicContent />} />
-            </Routes>
-          </div>
+          <Routes>
+            {/* Landing page as the main route */}
+            <Route path="/" element={<LandingPage />} />
+            
+            {/* Demo routes with the original app functionality */}
+            <Route path="/demo" element={
+              <div className="app-container">
+                <Navbar />
+                <GlobalStats />
+                <Dashboard setSelectedAgent={setSelectedAgent} />
+              </div>
+            } />
+            <Route path="/agent/:id" element={
+              <div className="app-container">
+                <Navbar />
+                <GlobalStats />
+                <AgentProfile selectedAgent={selectedAgent} />
+              </div>
+            } />
+            <Route path="/family-tree" element={
+              <div className="app-container">
+                <Navbar />
+                <GlobalStats />
+                <FamilyTree setSelectedAgent={setSelectedAgent} />
+              </div>
+            } />
+            <Route path="/breeding" element={
+              <div className="app-container">
+                <Navbar />
+                <GlobalStats />
+                <AgentBreeding />
+              </div>
+            } />
+            
+            {/* Fallback route */}
+            <Route path="*" element={<BasicContent />} />
+          </Routes>
         </Router>
       </ThemeProvider>
     );
