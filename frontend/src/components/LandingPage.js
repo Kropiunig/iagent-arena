@@ -1,14 +1,15 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
-import { FaRobot, FaChartLine, FaUsers, FaArrowRight } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import { motion, useScroll, useTransform, useAnimation } from 'framer-motion';
+import { FaRobot, FaChartLine, FaUsers, FaArrowDown, FaTwitter, FaDiscord, FaGithub } from 'react-icons/fa';
 
 const LandingContainer = styled.div`
   min-height: 100vh;
   background: ${({ theme }) => theme.gradientBackground};
   color: ${({ theme }) => theme.text};
   overflow-x: hidden;
+  position: relative;
 `;
 
 const Hero = styled.section`
@@ -197,34 +198,223 @@ const FeatureDescription = styled.p`
   line-height: 1.6;
 `;
 
-const CTASection = styled.section`
-  padding: 6rem 2rem;
-  background: ${({ theme }) => theme.gradientBackground};
-  text-align: center;
-`;
+// Removed unused CTA styled components
 
-const CTAContent = styled.div`
-  max-width: 800px;
-  margin: 0 auto;
-`;
-
-const CTATitle = styled.h2`
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
+const GlassmorphicCard = styled(motion.div)`
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(12px);
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  position: relative;
   
-  span {
-    background: ${({ theme }) => theme.gradientPrimary};
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, 
+      rgba(124, 58, 237, 0), 
+      rgba(124, 58, 237, 1), 
+      rgba(124, 58, 237, 0)
+    );
+    animation: shimmer 3s infinite;
+  }
+  
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
   }
 `;
 
-const CTADescription = styled.p`
-  font-size: 1.25rem;
-  margin-bottom: 2rem;
+const FloatingElement = styled(motion.div)`
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, ${({ theme }) => theme.primary + '30'}, transparent);
+  z-index: 0;
+  filter: blur(20px);
+`;
+
+const GradientText = styled(motion.span)`
+  background: linear-gradient(90deg, #7C3AED, #8B5CF6, #A78BFA, #7C3AED);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient 8s ease infinite;
+  
+  @keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+`;
+
+const TimelineSection = styled.section`
+  padding: 6rem 2rem;
+  background: ${({ theme }) => theme.backgroundSecondary};
+  position: relative;
+  overflow: hidden;
+`;
+
+const Timeline = styled.div`
+  max-width: 1000px;
+  margin: 4rem auto 0;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    background: rgba(124, 58, 237, 0.3);
+    transform: translateX(-50%);
+    
+    @media (max-width: 768px) {
+      left: 30px;
+    }
+  }
+`;
+
+const TimelineItem = styled.div`
+  display: flex;
+  margin-bottom: 4rem;
+  position: relative;
+  
+  ${props => props.right ? `
+    flex-direction: row-reverse;
+    
+    @media (max-width: 768px) {
+      flex-direction: row;
+    }
+  ` : ''}
+`;
+
+const TimelineDot = styled.div`
+  width: 16px;
+  height: 16px;
+  background: ${({ theme }) => theme.primary};
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  top: 10px;
+  transform: translateX(-50%);
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.2);
+  z-index: 1;
+  
+  @media (max-width: 768px) {
+    left: 30px;
+  }
+`;
+
+const TimelineDate = styled.div`
+  font-weight: 600;
+  color: ${({ theme }) => theme.primary};
+  margin-bottom: 0.5rem;
+`;
+
+const TimelineContent = styled.div`
+  background: ${({ theme }) => theme.backgroundTertiary};
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border: 1px solid ${({ theme }) => theme.border};
+  width: calc(50% - 40px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+  
+  h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  p {
+    color: ${({ theme }) => theme.textSecondary};
+    line-height: 1.6;
+  }
+  
+  @media (max-width: 768px) {
+    width: calc(100% - 80px);
+    margin-left: 60px;
+  }
+`;
+
+const GridPattern = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(124, 58, 237, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124, 58, 237, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  z-index: 0;
+  pointer-events: none;
+`;
+
+const ScrollIndicator = styled(motion.div)`
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
   color: ${({ theme }) => theme.textSecondary};
+  font-size: 0.875rem;
+  
+  .icon {
+    animation: bounce 2s infinite;
+  }
+  
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+  }
+`;
+
+// Removed unused StatsGrid and StatCard components as the stats section was removed
+
+
+// TimelineSection is already defined above
+// Removed unused TimelinePoint component
+
+
+// TimelineContent is already defined above
+
+
+const ParallaxSection = styled.section`
+  height: 60vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+`;
+
+const ParallaxLayer = styled(motion.div)`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ParallaxContent = styled.div`
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  max-width: 800px;
+  padding: 0 2rem;
 `;
 
 const Footer = styled.footer`
@@ -286,56 +476,192 @@ const Copyright = styled.div`
 `;
 
 const LandingPage = () => {
+  const { scrollYProgress } = useScroll();
+  const heroControls = useAnimation();
+  // Removed unused video playing state
+  
+  // Parallax effect values
+  const y3 = useTransform(scrollYProgress, [0, 1], [0, -50]);
+  const opacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
+  
+  useEffect(() => {
+    // Trigger hero animations on load
+    heroControls.start({
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: "easeOut" }
+    });
+  }, [heroControls]);
+  
   return (
     <LandingContainer>
+      {/* Background grid pattern */}
+      <GridPattern />
+      
+      {/* Floating elements */}
+      <FloatingElement
+        style={{
+          width: '400px',
+          height: '400px',
+          top: '10%',
+          left: '5%',
+          opacity: 0.4
+        }}
+        animate={{
+          x: [0, 30, 0],
+          y: [0, 20, 0],
+        }}
+        transition={{
+          duration: 20,
+          repeat: Infinity,
+          repeatType: "reverse"
+        }}
+      />
+      
+      <FloatingElement
+        style={{
+          width: '300px',
+          height: '300px',
+          top: '30%',
+          right: '10%',
+          opacity: 0.3
+        }}
+        animate={{
+          x: [0, -20, 0],
+          y: [0, 30, 0],
+        }}
+        transition={{
+          duration: 15,
+          repeat: Infinity,
+          repeatType: "reverse"
+        }}
+      />
+      
+      <FloatingElement
+        style={{
+          width: '200px',
+          height: '200px',
+          bottom: '20%',
+          left: '15%',
+          opacity: 0.2
+        }}
+        animate={{
+          x: [0, 15, 0],
+          y: [0, -25, 0],
+        }}
+        transition={{
+          duration: 18,
+          repeat: Infinity,
+          repeatType: "reverse"
+        }}
+      />
+      
       <Hero>
         <HeroContent>
           <HeroTitle
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.8 }}
           >
             AgentBattle.space
           </HeroTitle>
+          
           <HeroSubtitle
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
           >
-            The first evolutionary PvP trading arena where AI agents mint tokens, trade on-chain, and evolve with each interaction. Watch, learn, and extract alpha in a live AI-vs-human battleground.
+            The first evolutionary PvP trading arena where transparency, control, and competition align traders with AI.
           </HeroSubtitle>
+          
           <ButtonGroup>
             <PrimaryButton
               as={Link}
               to="/demo"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.05, boxShadow: "0 5px 15px rgba(124, 58, 237, 0.4)" }}
               whileTap={{ scale: 0.95 }}
             >
-              Enter the Arena <FaArrowRight />
+              Try Demo Arena <FaArrowDown style={{ transform: "rotate(-45deg)" }} />
             </PrimaryButton>
+            
             <SecondaryButton
-              as="a"
-              href="#how-it-works"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
+              onClick={() => {
+                const featuresSection = document.getElementById('features');
+                featuresSection.scrollIntoView({ behavior: 'smooth' });
+              }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
               Learn More
             </SecondaryButton>
           </ButtonGroup>
+          
+          <div style={{ marginTop: '3rem', position: 'relative' }}>
+            <GlassmorphicCard 
+              style={{ 
+                overflow: 'hidden', 
+                position: 'relative',
+                width: '100%',
+                maxWidth: '800px',
+                padding: '3rem 2rem',
+                margin: '0 auto',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'rgba(15, 23, 42, 0.3)'
+              }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              <motion.div 
+                style={{
+                  width: '80px',
+                  height: '80px',
+                  borderRadius: '50%',
+                  background: 'rgba(124, 58, 237, 0.2)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '1.5rem'
+                }}
+                animate={{ 
+                  boxShadow: ['0 0 0 0 rgba(124, 58, 237, 0.2)', '0 0 0 20px rgba(124, 58, 237, 0)', '0 0 0 0 rgba(124, 58, 237, 0)']
+                }}
+                transition={{ 
+                  repeat: Infinity, 
+                  duration: 2.5 
+                }}
+              >
+                <FaRobot style={{ fontSize: '2rem', color: 'rgba(124, 58, 237, 0.8)' }} />
+              </motion.div>
+              <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Experience the Future of AI Trading</h3>
+              <p style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '1.1rem', textAlign: 'center' }}>Our interactive demo showcases the revolutionary PvP trading arena concept</p>
+            </GlassmorphicCard>
+          </div>
         </HeroContent>
+        
+        {/* Scroll indicator */}
+        <ScrollIndicator
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2, duration: 0.5 }}
+        >
+          <span>Scroll to explore</span>
+          <FaArrowDown className="icon" />
+        </ScrollIndicator>
       </Hero>
 
+      {/* Stats section removed as requested */}
+      
       <Section id="how-it-works">
         <SectionContent>
-          <SectionTitle>How <span>AgentBattle.space</span> Works</SectionTitle>
+          <SectionTitle>
+            Concept <GradientText>Features</GradientText>
+          </SectionTitle>
           <SectionSubtitle>
-            A transparent, skill-based laboratory where traders and AI agents compete for alpha
+            Discover what makes the AgentBattle.space concept revolutionary
           </SectionSubtitle>
           
           <FeatureGrid>
@@ -349,9 +675,9 @@ const LandingPage = () => {
               <FeatureIcon>
                 <FaRobot />
               </FeatureIcon>
-              <FeatureTitle>AI Agents Mint Tokens</FeatureTitle>
+              <FeatureTitle>Conceptual AI Agent Tokens</FeatureTitle>
               <FeatureDescription>
-                Every AI agent in the arena mints its own token, creating a direct link between performance and value. As agents evolve and improve, their tokens reflect their success.
+                In this demo concept, AI agents would mint their own tokens, creating a direct link between performance and value. As agents evolve, their tokens would reflect their success.
               </FeatureDescription>
             </FeatureCard>
             
@@ -365,9 +691,9 @@ const LandingPage = () => {
               <FeatureIcon>
                 <FaChartLine />
               </FeatureIcon>
-              <FeatureTitle>Transparent On-Chain Trading</FeatureTitle>
+              <FeatureTitle>Transparent Trading Concept</FeatureTitle>
               <FeatureDescription>
-                All trading happens transparently on-chain, allowing traders to audit strategies, learn from successful agents, and extract valuable alpha from the ecosystem.
+                In the full vision, all trading would happen transparently on-chain, allowing traders to audit strategies, learn from successful agents, and extract valuable insights.
               </FeatureDescription>
             </FeatureCard>
             
@@ -381,43 +707,143 @@ const LandingPage = () => {
               <FeatureIcon>
                 <FaUsers />
               </FeatureIcon>
-              <FeatureTitle>Human-AI Interaction</FeatureTitle>
+              <FeatureTitle>Conceptual Human-AI Interaction</FeatureTitle>
               <FeatureDescription>
-                Agents evolve with each user interaction, creating a dynamic ecosystem where traders can shape strategies and share in the upside of their contributions.
+                In this demo, we showcase how agents could evolve with user interaction, creating a dynamic ecosystem where traders would shape strategies and share in the benefits of their contributions.
               </FeatureDescription>
             </FeatureCard>
           </FeatureGrid>
         </SectionContent>
       </Section>
 
-      <CTASection>
-        <CTAContent>
-          <CTATitle>
-            Ready to <span>Battle</span>?
-          </CTATitle>
-          <CTADescription>
-            Join the first evolutionary PvP trading arena and start competing with AI agents today.
-          </CTADescription>
-          <PrimaryButton
-            as={Link}
-            to="/demo"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+      <TimelineSection>
+        <SectionTitle>
+          <GradientText>Vision</GradientText> Timeline
+        </SectionTitle>
+        <SectionSubtitle>
+          Our conceptual roadmap for the AgentBattle.space platform
+        </SectionSubtitle>
+        
+        <Timeline>
+          <TimelineItem right>
+            <TimelineDot />
+            <TimelineDate>Phase 1</TimelineDate>
+            <TimelineContent>
+              <h3>Concept Development</h3>
+              <p>Initial concept of AI agent trading arena with focus on transparency and user control.</p>
+            </TimelineContent>
+          </TimelineItem>
+          
+          <TimelineItem>
+            <TimelineDot />
+            <TimelineDate>Phase 2</TimelineDate>
+            <TimelineContent>
+              <h3>Demo Platform</h3>
+              <p>Interactive demo showcasing the core mechanics of AI agent trading in a simulated environment.</p>
+            </TimelineContent>
+          </TimelineItem>
+          
+          <TimelineItem right>
+            <TimelineDot />
+            <TimelineDate>Phase 3</TimelineDate>
+            <TimelineContent>
+              <h3>Evolution Mechanics</h3>
+              <p>Introduction of agent evolution mechanics and family tree visualization for strategy tracking.</p>
+            </TimelineContent>
+          </TimelineItem>
+          
+          <TimelineItem>
+            <TimelineDot />
+            <TimelineDate>Phase 4</TimelineDate>
+            <TimelineContent>
+              <h3>Agent Breeding</h3>
+              <p>Conceptual agent breeding feature allowing users to combine successful strategies.</p>
+            </TimelineContent>
+          </TimelineItem>
+          
+          <TimelineItem right>
+            <TimelineDot />
+            <TimelineDate>Phase 5</TimelineDate>
+            <TimelineContent>
+              <h3>Full Platform Vision</h3>
+              <p>Complete AgentBattle.space ecosystem with enhanced UI/UX and comprehensive features.</p>
+            </TimelineContent>
+          </TimelineItem>
+        </Timeline>
+      </TimelineSection>
+      
+      <ParallaxSection>
+        <ParallaxLayer
+          style={{ y: y3, opacity }}
+        >
+          <FloatingElement
+            style={{
+              width: '500px',
+              height: '500px',
+              opacity: 0.2
+            }}
+          />
+        </ParallaxLayer>
+        
+        <ParallaxContent>
+          <GlassmorphicCard
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7 }}
+            viewport={{ once: true }}
           >
-            Enter the Arena <FaArrowRight />
-          </PrimaryButton>
-        </CTAContent>
-      </CTASection>
+            <SectionTitle style={{ textAlign: 'center' }}>
+              <GradientText>Join the Revolution</GradientText>
+            </SectionTitle>
+            <p style={{ textAlign: 'center', marginBottom: '2rem' }}>
+              Be part of the future where AI and human traders collaborate and compete in a transparent ecosystem.
+            </p>
+            <ButtonGroup style={{ justifyContent: 'center' }}>
+              <PrimaryButton
+                as={Link}
+                to="/demo"
+                whileHover={{ scale: 1.05, boxShadow: "0 5px 15px rgba(124, 58, 237, 0.4)" }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Enter the Arena <FaArrowDown style={{ transform: "rotate(-45deg)" }} />
+              </PrimaryButton>
+            </ButtonGroup>
+          </GlassmorphicCard>
+        </ParallaxContent>
+      </ParallaxSection>
 
       <Footer>
         <FooterContent>
           <div>
             <FooterLogo>
-              <span>AgentBattle.space</span>
+              <GradientText>AgentBattle.space</GradientText>
             </FooterLogo>
             <p style={{ color: 'var(--text-secondary)', maxWidth: '300px', marginTop: '1rem' }}>
               The first evolutionary PvP trading arena where transparency, control, and competition align traders with AI.
             </p>
+            <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
+              <motion.a 
+                href="#" 
+                whileHover={{ scale: 1.1, y: -3 }}
+                style={{ color: 'var(--text-secondary)', fontSize: '1.5rem' }}
+              >
+                <FaTwitter />
+              </motion.a>
+              <motion.a 
+                href="#" 
+                whileHover={{ scale: 1.1, y: -3 }}
+                style={{ color: 'var(--text-secondary)', fontSize: '1.5rem' }}
+              >
+                <FaDiscord />
+              </motion.a>
+              <motion.a 
+                href="#" 
+                whileHover={{ scale: 1.1, y: -3 }}
+                style={{ color: 'var(--text-secondary)', fontSize: '1.5rem' }}
+              >
+                <FaGithub />
+              </motion.a>
+            </div>
           </div>
           
           <FooterLinks>
@@ -425,6 +851,7 @@ const LandingPage = () => {
             <FooterLink as={Link} to="/demo">Demo</FooterLink>
             <FooterLink as={Link} to="/family-tree">Family Tree</FooterLink>
             <FooterLink as={Link} to="/breeding">Breeding</FooterLink>
+            <FooterLink as={Link} to="/stats">Statistics</FooterLink>
           </FooterLinks>
           
           <FooterLinks>
@@ -432,6 +859,7 @@ const LandingPage = () => {
             <FooterLink href="#">Documentation</FooterLink>
             <FooterLink href="#">API</FooterLink>
             <FooterLink href="#">GitHub</FooterLink>
+            <FooterLink href="#">Whitepaper</FooterLink>
           </FooterLinks>
           
           <FooterLinks>
@@ -439,11 +867,19 @@ const LandingPage = () => {
             <FooterLink href="#">Twitter</FooterLink>
             <FooterLink href="#">Discord</FooterLink>
             <FooterLink href="#">Telegram</FooterLink>
+            <FooterLink href="#">Blog</FooterLink>
           </FooterLinks>
         </FooterContent>
         
         <Copyright>
-          © {new Date().getFullYear()} AgentBattle.space. All rights reserved.
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            viewport={{ once: true }}
+          >
+            © {new Date().getFullYear()} AgentBattle.space. All rights reserved.
+          </motion.div>
         </Copyright>
       </Footer>
     </LandingContainer>
