@@ -13,18 +13,14 @@ const LandingContainer = styled.div`
 `;
 
 const Hero = styled.section`
+  min-height: 100vh;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 6rem 2rem;
-  text-align: center;
   position: relative;
-  
-  @media (min-width: 768px) {
-    min-height: 80vh;
-  }
-  
+  overflow: hidden;
+  padding: 2rem;
+  background: radial-gradient(circle at 50% 50%, rgba(124, 58, 237, 0.15) 0%, rgba(15, 23, 42, 0) 70%);
   &::before {
     content: '';
     position: absolute;
@@ -41,17 +37,30 @@ const HeroContent = styled.div`
   position: relative;
   z-index: 1;
   max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 1.5rem;
+  
+  @media (min-width: 768px) {
+    padding: 0 2rem;
+  }
 `;
 
 const HeroTitle = styled(motion.h1)`
-  font-size: 3.5rem;
-  font-weight: 800;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 900;
   margin-bottom: 1.5rem;
-  background: ${({ theme }) => theme.gradientPrimary};
+  background: linear-gradient(135deg, #7c3aed 0%, #3b82f6 50%, #06b6d4 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  text-shadow: 0 0 80px rgba(124, 58, 237, 0.5);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
   
   @media (min-width: 768px) {
     font-size: 5rem;
@@ -60,9 +69,13 @@ const HeroTitle = styled(motion.h1)`
 
 const HeroSubtitle = styled(motion.p)`
   font-size: 1.25rem;
-  max-width: 800px;
+  max-width: 700px;
   margin: 0 auto 2.5rem;
-  color: ${({ theme }) => theme.textSecondary};
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   
   @media (min-width: 768px) {
     font-size: 1.5rem;
@@ -72,70 +85,158 @@ const HeroSubtitle = styled(motion.p)`
 const ButtonGroup = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 1.25rem;
   justify-content: center;
-  margin-top: 2rem;
+  margin-top: 2.5rem;
+  position: relative;
+  z-index: 2;
 `;
 
 const PrimaryButton = styled(motion.button)`
-  padding: 0.75rem 1.5rem;
+  padding: 0.85rem 2rem;
   font-size: 1rem;
   font-weight: 600;
-  background: ${({ theme }) => theme.gradientPrimary};
+  background: linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%);
   color: white;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
   transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
   
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(124, 58, 237, 0.4);
+    
+    &::before {
+      opacity: 1;
+    }
+  }
+  
+  &:active {
+    transform: translateY(-1px);
   }
 `;
 
 const SecondaryButton = styled(motion.button)`
-  padding: 0.75rem 1.5rem;
+  padding: 0.85rem 2rem;
   font-size: 1rem;
   font-weight: 600;
-  background: transparent;
-  color: ${({ theme }) => theme.text};
-  border: 1px solid ${({ theme }) => theme.border};
-  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
   transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
   
   &:hover {
-    background: rgba(255, 255, 255, 0.05);
-    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-3px);
+    border-color: rgba(124, 58, 237, 0.3);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  &:active {
+    transform: translateY(-1px);
   }
 `;
 
 const Section = styled.section`
-  padding: 6rem 2rem;
+  padding: 8rem 2rem;
   position: relative;
+  overflow: hidden;
   
   &:nth-child(even) {
-    background: ${({ theme }) => theme.backgroundSecondary};
+    background: rgba(15, 23, 42, 0.6);
+    box-shadow: inset 0 0 100px rgba(124, 58, 237, 0.05);
+  }
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 15% 50%, rgba(124, 58, 237, 0.08) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 85% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
+    pointer-events: none;
   }
 `;
 
 const SectionContent = styled.div`
   max-width: 1200px;
   margin: 0 auto;
+  position: relative;
+  z-index: 2;
+  padding: 0 1rem;
+  
+  @media (min-width: 768px) {
+    padding: 0 2rem;
+  }
 `;
 
 const SectionTitle = styled.h2`
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 800;
+  margin-bottom: 2rem;
   text-align: center;
+  background: linear-gradient(135deg, #7c3aed 0%, #3b82f6 50%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #7c3aed, #3b82f6);
+    border-radius: 2px;
+  }
   
   span {
     background: ${({ theme }) => theme.gradientPrimary};
@@ -147,81 +248,206 @@ const SectionTitle = styled.h2`
 
 const SectionSubtitle = styled.p`
   font-size: 1.25rem;
-  max-width: 800px;
-  margin: 0 auto 3rem;
+  max-width: 700px;
+  margin: 0 auto 4rem;
   text-align: center;
-  color: ${({ theme }) => theme.textSecondary};
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  font-weight: 400;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  
+  @media (min-width: 768px) {
+    font-size: 1.35rem;
+  }
 `;
 
 const FeatureGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-top: 3rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2.5rem;
+  margin-top: 4rem;
+  position: relative;
+  z-index: 2;
 `;
 
 const FeatureCard = styled(motion.div)`
-  background: ${({ theme }) => theme.backgroundTertiary};
-  border-radius: 1rem;
-  padding: 2rem;
-  border: 1px solid ${({ theme }) => theme.border};
-  transition: all 0.3s ease;
-  
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    border-color: ${({ theme }) => theme.primary + '50'};
-  }
-`;
-
-const FeatureIcon = styled.div`
-  width: 3rem;
-  height: 3rem;
-  border-radius: 0.75rem;
-  background: ${({ theme }) => theme.primary + '20'};
-  color: ${({ theme }) => theme.primary};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-`;
-
-const FeatureTitle = styled.h3`
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-`;
-
-const FeatureDescription = styled.p`
-  color: ${({ theme }) => theme.textSecondary};
-  line-height: 1.6;
-`;
-
-// Removed unused CTA styled components
-
-const GlassmorphicCard = styled(motion.div)`
-  background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(12px);
-  border-radius: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 1.25rem;
   padding: 2.5rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
   
   &::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #7c3aed, #3b82f6);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0) 100%);
+    transform: rotate(45deg);
+    z-index: -1;
+    transition: all 0.6s ease;
+    opacity: 0;
+  }
+  
+  &:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(124, 58, 237, 0.3);
+    border-color: rgba(124, 58, 237, 0.4);
+    
+    &::before {
+      opacity: 1;
+    }
+    
+    &::after {
+      animation: shimmer 2s infinite;
+      opacity: 1;
+    }
+  }
+  
+  @keyframes shimmer {
+    0% {
+      top: -50%;
+      left: -50%;
+    }
+    100% {
+      top: 150%;
+      left: 150%;
+    }
+  }
+`;
+
+const FeatureIcon = styled(motion.div)`
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 1.25rem;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.2) 0%, rgba(59, 130, 246, 0.2) 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.75rem;
+  position: relative;
+  box-shadow: 0 8px 20px rgba(124, 58, 237, 0.15);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 2px;
+    background: linear-gradient(135deg, #7c3aed, #3b82f6);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    padding: 2px;
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.5), rgba(59, 130, 246, 0.5));
+    opacity: 0;
+    filter: blur(10px);
+    transition: opacity 0.4s ease;
+  }
+  
+  svg {
+    filter: drop-shadow(0 0 8px rgba(124, 58, 237, 0.5));
+    transition: all 0.3s ease;
+  }
+  
+  ${FeatureCard}:hover & {
+    transform: scale(1.1) translateY(-5px);
+    box-shadow: 0 15px 30px rgba(124, 58, 237, 0.25);
+    
+    &::before {
+      opacity: 1;
+    }
+    
+    &::after {
+      opacity: 1;
+    }
+    
+    svg {
+      transform: scale(1.2);
+      filter: drop-shadow(0 0 12px rgba(124, 58, 237, 0.8));
+    }
+  }
+`;
+
+const FeatureTitle = styled.h3`
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.75) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.01em;
+`;
+
+const FeatureDescription = styled.p`
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.7;
+  font-size: 1rem;
+  margin-top: 0.75rem;
+  letter-spacing: 0.01em;
+`;
+
+// Removed unused CTA styled components
+
+const GlassmorphicCard = styled(motion.div)`
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(16px);
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 3rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(125deg, rgba(124, 58, 237, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%);
+    pointer-events: none;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
     right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, 
-      rgba(124, 58, 237, 0), 
-      rgba(124, 58, 237, 1), 
-      rgba(124, 58, 237, 0)
-    );
+    height: 3px;
+    background: linear-gradient(90deg, #7c3aed, #3b82f6, #06b6d4);
+    opacity: 0.7;
     animation: shimmer 3s infinite;
   }
   
@@ -236,7 +462,9 @@ const FloatingElement = styled(motion.div)`
   border-radius: 50%;
   background: radial-gradient(circle at center, ${({ theme }) => theme.primary + '30'}, transparent);
   z-index: 0;
-  filter: blur(20px);
+  filter: blur(40px);
+  pointer-events: none;
+  mix-blend-mode: screen;
 `;
 
 const GradientText = styled(motion.span)`
@@ -256,33 +484,111 @@ const GradientText = styled(motion.span)`
 
 const TimelineSection = styled.section`
   padding: 6rem 2rem;
-  background: ${({ theme }) => theme.backgroundSecondary};
   position: relative;
   overflow: hidden;
+  background: ${({ theme }) => theme.backgroundSecondary};
+  
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(124, 58, 237, 0.2) 0%, rgba(124, 58, 237, 0) 70%);
+    z-index: 0;
+    animation: floatAnimation 15s infinite ease-in-out;
+  }
+  
+  &::before {
+    top: 10%;
+    left: -100px;
+  }
+  
+  &::after {
+    bottom: 20%;
+    right: -100px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0) 70%);
+    animation-delay: 5s;
+  }
+  
+  @keyframes floatAnimation {
+    0% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+    25% { transform: translate(20px, 10px) scale(1.05); opacity: 0.6; }
+    50% { transform: translate(0, 20px) scale(1); opacity: 0.5; }
+    75% { transform: translate(-20px, 10px) scale(0.95); opacity: 0.4; }
+    100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+  }
+  
+  .particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    pointer-events: none;
+  }
+  
+  .particle:nth-child(1) { top: 20%; left: 10%; animation: particleFloat 20s infinite linear; }
+  .particle:nth-child(2) { top: 70%; left: 20%; animation: particleFloat 25s infinite linear; animation-delay: 2s; }
+  .particle:nth-child(3) { top: 40%; left: 80%; animation: particleFloat 22s infinite linear; animation-delay: 5s; }
+  .particle:nth-child(4) { top: 80%; left: 70%; animation: particleFloat 28s infinite linear; animation-delay: 7s; }
+  .particle:nth-child(5) { top: 30%; left: 50%; animation: particleFloat 24s infinite linear; animation-delay: 9s; }
+  
+  @keyframes particleFloat {
+    0% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+    25% { transform: translate(50px, 25px) scale(1.5); opacity: 0.6; }
+    50% { transform: translate(100px, 0) scale(1); opacity: 0.3; }
+    75% { transform: translate(50px, -25px) scale(0.5); opacity: 0.1; }
+    100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+  }
 `;
 
-const Timeline = styled.div`
-  max-width: 1000px;
-  margin: 4rem auto 0;
+const Timeline = styled(motion.div)`
   position: relative;
+  max-width: 1200px;
+  margin: 4rem auto 0;
+  padding: 2rem 0;
   
   &::before {
     content: '';
     position: absolute;
-    top: 0;
-    bottom: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(124, 58, 237, 0.2), rgba(59, 130, 246, 0.2));
     left: 50%;
-    width: 2px;
-    background: rgba(124, 58, 237, 0.3);
     transform: translateX(-50%);
-    
-    @media (max-width: 768px) {
+    box-shadow: 0 0 10px rgba(124, 58, 237, 0.3);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(124, 58, 237, 0.8), rgba(59, 130, 246, 0.8));
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 15px rgba(124, 58, 237, 0.6);
+    opacity: 0.6;
+    filter: blur(3px);
+    animation: pulseTimeline 3s infinite alternate;
+  }
+  
+  @keyframes pulseTimeline {
+    0% { opacity: 0.3; box-shadow: 0 0 10px rgba(124, 58, 237, 0.3); }
+    100% { opacity: 0.8; box-shadow: 0 0 20px rgba(124, 58, 237, 0.7); }
+  }
+  
+  @media (max-width: 768px) {
+    &::before, &::after {
       left: 30px;
     }
   }
 `;
 
-const TimelineItem = styled.div`
+const TimelineItem = styled(motion.div)`
   display: flex;
   margin-bottom: 4rem;
   position: relative;
@@ -296,46 +602,123 @@ const TimelineItem = styled.div`
   ` : ''}
 `;
 
-const TimelineDot = styled.div`
+const timelineItemVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+};
+
+const TimelineDot = styled(motion.div)`
   width: 16px;
   height: 16px;
-  background: ${({ theme }) => theme.primary};
+  background: linear-gradient(135deg, ${({ theme }) => theme.primary}, #3b82f6);
   border-radius: 50%;
   position: absolute;
   left: 50%;
   top: 10px;
   transform: translateX(-50%);
-  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.2);
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.2), 0 0 15px rgba(124, 58, 237, 0.4);
   z-index: 1;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    border-radius: 50%;
+    background: transparent;
+    border: 2px solid rgba(124, 58, 237, 0.5);
+    opacity: 0;
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% { transform: scale(0.95); opacity: 0.7; }
+    50% { transform: scale(1.05); opacity: 0.3; }
+    100% { transform: scale(0.95); opacity: 0.7; }
+  }
   
   @media (max-width: 768px) {
     left: 30px;
   }
 `;
 
-const TimelineDate = styled.div`
+const TimelineDate = styled(motion.div)`
   font-weight: 600;
-  color: ${({ theme }) => theme.primary};
+  background: linear-gradient(135deg, ${({ theme }) => theme.primary}, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+  display: inline-block;
 `;
 
-const TimelineContent = styled.div`
-  background: ${({ theme }) => theme.backgroundTertiary};
+const timelineDateVariants = {
+  hidden: { opacity: 0, x: -20 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: "easeOut" } }
+};
+
+const timelineContentVariants = {
+  hidden: { opacity: 0, y: 20, scale: 0.95 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.7, ease: "easeOut" } }
+};
+
+const timelineContainerVariants = {
+  hidden: { opacity: 1 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.4,
+      delayChildren: 0.3
+    }
+  }
+};
+
+const TimelineContent = styled(motion.div)`
+  background: ${({ theme }) => `rgba(${theme.backgroundTertiaryRgb}, 0.7)`};
+  backdrop-filter: blur(10px);
   border-radius: 1rem;
   padding: 1.5rem;
-  border: 1px solid ${({ theme }) => theme.border};
+  border: 1px solid ${({ theme }) => `rgba(${theme.borderRgb}, 0.6)`};
   width: calc(50% - 40px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
   position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, ${({ theme }) => theme.primary}, #3b82f6);
+    opacity: 0.8;
+  }
   
   h3 {
     font-size: 1.25rem;
     margin-bottom: 0.75rem;
+    background: linear-gradient(135deg, #fff, rgba(255, 255, 255, 0.8));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
   }
   
   p {
     color: ${({ theme }) => theme.textSecondary};
     line-height: 1.6;
+    font-size: 0.95rem;
+    position: relative;
+    z-index: 1;
   }
   
   @media (max-width: 768px) {
@@ -353,10 +736,12 @@ const GridPattern = styled.div`
   background-image: 
     linear-gradient(rgba(124, 58, 237, 0.05) 1px, transparent 1px),
     linear-gradient(90deg, rgba(124, 58, 237, 0.05) 1px, transparent 1px);
-  background-size: 40px 40px;
+  background-size: 30px 30px;
   z-index: 0;
-  pointer-events: none;
+  opacity: 0.5;
 `;
+
+
 
 const ScrollIndicator = styled(motion.div)`
   position: absolute;
@@ -501,20 +886,45 @@ const LandingPage = () => {
       {/* Floating elements */}
       <FloatingElement
         style={{
-          width: '400px',
-          height: '400px',
-          top: '10%',
-          left: '5%',
-          opacity: 0.4
+          width: '500px',
+          height: '500px',
+          top: '5%',
+          left: '0%',
+          opacity: 0.4,
+          background: 'radial-gradient(circle at center, rgba(124, 58, 237, 0.2) 0%, rgba(59, 130, 246, 0.05) 70%)'
         }}
         animate={{
-          x: [0, 30, 0],
-          y: [0, 20, 0],
+          x: [0, 40, 0],
+          y: [0, 25, 0],
+          scale: [1, 1.1, 1]
+        }}
+        transition={{
+          duration: 25,
+          repeat: Infinity,
+          repeatType: "reverse",
+          ease: "easeInOut"
+        }}
+      />
+      
+      <FloatingElement
+        style={{
+          width: '400px',
+          height: '400px',
+          top: '20%',
+          right: '5%',
+          opacity: 0.3,
+          background: 'radial-gradient(circle at center, rgba(59, 130, 246, 0.15) 0%, rgba(6, 182, 212, 0.05) 70%)'
+        }}
+        animate={{
+          x: [0, -30, 0],
+          y: [0, 40, 0],
+          scale: [1, 1.15, 1]
         }}
         transition={{
           duration: 20,
           repeat: Infinity,
-          repeatType: "reverse"
+          repeatType: "reverse",
+          ease: "easeInOut"
         }}
       />
       
@@ -522,66 +932,79 @@ const LandingPage = () => {
         style={{
           width: '300px',
           height: '300px',
-          top: '30%',
-          right: '10%',
-          opacity: 0.3
+          bottom: '15%',
+          left: '10%',
+          opacity: 0.25,
+          background: 'radial-gradient(circle at center, rgba(139, 92, 246, 0.15) 0%, rgba(124, 58, 237, 0.05) 70%)'
         }}
         animate={{
-          x: [0, -20, 0],
-          y: [0, 30, 0],
+          x: [0, 25, 0],
+          y: [0, -30, 0],
+          scale: [1, 1.1, 1]
         }}
         transition={{
-          duration: 15,
+          duration: 22,
           repeat: Infinity,
-          repeatType: "reverse"
+          repeatType: "reverse",
+          ease: "easeInOut"
         }}
       />
       
       <FloatingElement
         style={{
-          width: '200px',
-          height: '200px',
-          bottom: '20%',
-          left: '15%',
-          opacity: 0.2
+          width: '250px',
+          height: '250px',
+          bottom: '25%',
+          right: '15%',
+          opacity: 0.2,
+          background: 'radial-gradient(circle at center, rgba(6, 182, 212, 0.15) 0%, rgba(59, 130, 246, 0.05) 70%)'
         }}
         animate={{
-          x: [0, 15, 0],
-          y: [0, -25, 0],
+          x: [0, -20, 0],
+          y: [0, -20, 0],
+          scale: [1, 1.05, 1]
         }}
         transition={{
           duration: 18,
           repeat: Infinity,
-          repeatType: "reverse"
+          repeatType: "reverse",
+          ease: "easeInOut"
         }}
       />
       
       <Hero>
         <HeroContent>
           <HeroTitle
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 1, type: "spring", stiffness: 50 }}
           >
-            AgentBattle.space
+            AgentBattle<span style={{ color: "#3b82f6" }}>.space</span>
           </HeroTitle>
           
           <HeroSubtitle
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
           >
             The first evolutionary PvP trading arena where transparency, control, and competition align traders with AI.
           </HeroSubtitle>
           
-          <ButtonGroup>
+          <ButtonGroup
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+          >
             <PrimaryButton
               as={Link}
               to="/demo"
-              whileHover={{ scale: 1.05, boxShadow: "0 5px 15px rgba(124, 58, 237, 0.4)" }}
+              whileHover={{ scale: 1.05, boxShadow: "0 8px 25px rgba(124, 58, 237, 0.6)" }}
               whileTap={{ scale: 0.95 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.7 }}
             >
-              Try Demo Arena <FaArrowDown style={{ transform: "rotate(-45deg)" }} />
+              Try Demo Arena <FaArrowDown style={{ transform: "rotate(-45deg)", marginLeft: "8px" }} />
             </PrimaryButton>
             
             <SecondaryButton
@@ -589,8 +1012,11 @@ const LandingPage = () => {
                 const featuresSection = document.getElementById('features');
                 featuresSection.scrollIntoView({ behavior: 'smooth' });
               }}
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.05, borderColor: "rgba(124, 58, 237, 0.5)" }}
               whileTap={{ scale: 0.95 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.9 }}
             >
               Learn More
             </SecondaryButton>
@@ -717,6 +1143,11 @@ const LandingPage = () => {
       </Section>
 
       <TimelineSection>
+        <div className="particle"></div>
+        <div className="particle"></div>
+        <div className="particle"></div>
+        <div className="particle"></div>
+        <div className="particle"></div>
         <SectionTitle>
           <GradientText>Vision</GradientText> Timeline
         </SectionTitle>
@@ -724,47 +1155,98 @@ const LandingPage = () => {
           Our conceptual roadmap for the AgentBattle.space platform
         </SectionSubtitle>
         
-        <Timeline>
-          <TimelineItem right>
-            <TimelineDot />
-            <TimelineDate>Phase 1</TimelineDate>
-            <TimelineContent>
+        <Timeline
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={timelineContainerVariants}
+        >
+          <TimelineItem 
+            right 
+            variants={timelineItemVariants}
+          >
+            <TimelineDot 
+              animate={{ 
+                boxShadow: ['0 0 0 4px rgba(124, 58, 237, 0.2), 0 0 15px rgba(124, 58, 237, 0.4)', '0 0 0 4px rgba(124, 58, 237, 0.3), 0 0 25px rgba(124, 58, 237, 0.6)', '0 0 0 4px rgba(124, 58, 237, 0.2), 0 0 15px rgba(124, 58, 237, 0.4)'] 
+              }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+            <TimelineDate variants={timelineDateVariants}>Phase 1</TimelineDate>
+            <TimelineContent variants={timelineContentVariants}>
               <h3>Concept Development</h3>
               <p>Initial concept of AI agent trading arena with focus on transparency and user control.</p>
             </TimelineContent>
           </TimelineItem>
           
-          <TimelineItem>
-            <TimelineDot />
-            <TimelineDate>Phase 2</TimelineDate>
-            <TimelineContent>
+          <TimelineItem
+
+            variants={timelineItemVariants}
+
+          >
+            <TimelineDot 
+              animate={{ 
+                boxShadow: ['0 0 0 4px rgba(124, 58, 237, 0.2), 0 0 15px rgba(124, 58, 237, 0.4)', '0 0 0 4px rgba(124, 58, 237, 0.3), 0 0 25px rgba(124, 58, 237, 0.6)', '0 0 0 4px rgba(124, 58, 237, 0.2), 0 0 15px rgba(124, 58, 237, 0.4)'] 
+              }}
+              transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
+            />
+            <TimelineDate variants={timelineDateVariants}>Phase 2</TimelineDate>
+            <TimelineContent variants={timelineContentVariants}>
               <h3>Demo Platform</h3>
               <p>Interactive demo showcasing the core mechanics of AI agent trading in a simulated environment.</p>
             </TimelineContent>
           </TimelineItem>
           
-          <TimelineItem right>
-            <TimelineDot />
-            <TimelineDate>Phase 3</TimelineDate>
-            <TimelineContent>
+          <TimelineItem 
+            right
+
+            variants={timelineItemVariants}
+
+          >
+            <TimelineDot 
+              animate={{ 
+                boxShadow: ['0 0 0 4px rgba(124, 58, 237, 0.2), 0 0 15px rgba(124, 58, 237, 0.4)', '0 0 0 4px rgba(124, 58, 237, 0.3), 0 0 25px rgba(124, 58, 237, 0.6)', '0 0 0 4px rgba(124, 58, 237, 0.2), 0 0 15px rgba(124, 58, 237, 0.4)'] 
+              }}
+              transition={{ duration: 2, repeat: Infinity, delay: 0.6 }}
+            />
+            <TimelineDate variants={timelineDateVariants}>Phase 3</TimelineDate>
+            <TimelineContent variants={timelineContentVariants}>
               <h3>Evolution Mechanics</h3>
               <p>Introduction of agent evolution mechanics and family tree visualization for strategy tracking.</p>
             </TimelineContent>
           </TimelineItem>
           
-          <TimelineItem>
-            <TimelineDot />
-            <TimelineDate>Phase 4</TimelineDate>
-            <TimelineContent>
+          <TimelineItem
+
+            variants={timelineItemVariants}
+
+          >
+            <TimelineDot 
+              animate={{ 
+                boxShadow: ['0 0 0 4px rgba(124, 58, 237, 0.2), 0 0 15px rgba(124, 58, 237, 0.4)', '0 0 0 4px rgba(124, 58, 237, 0.3), 0 0 25px rgba(124, 58, 237, 0.6)', '0 0 0 4px rgba(124, 58, 237, 0.2), 0 0 15px rgba(124, 58, 237, 0.4)'] 
+              }}
+              transition={{ duration: 2, repeat: Infinity, delay: 0.9 }}
+            />
+            <TimelineDate variants={timelineDateVariants}>Phase 4</TimelineDate>
+            <TimelineContent variants={timelineContentVariants}>
               <h3>Agent Breeding</h3>
               <p>Conceptual agent breeding feature allowing users to combine successful strategies.</p>
             </TimelineContent>
           </TimelineItem>
           
-          <TimelineItem right>
-            <TimelineDot />
-            <TimelineDate>Phase 5</TimelineDate>
-            <TimelineContent>
+          <TimelineItem 
+            right
+
+            variants={timelineItemVariants}
+
+          >
+            <TimelineDot 
+              animate={{ 
+                boxShadow: ['0 0 0 4px rgba(124, 58, 237, 0.2), 0 0 15px rgba(124, 58, 237, 0.4)', '0 0 0 4px rgba(124, 58, 237, 0.3), 0 0 25px rgba(124, 58, 237, 0.6)', '0 0 0 4px rgba(124, 58, 237, 0.2), 0 0 15px rgba(124, 58, 237, 0.4)'] 
+              }}
+              transition={{ duration: 2, repeat: Infinity, delay: 1.2 }}
+            />
+            <TimelineDate variants={timelineDateVariants}>Phase 5</TimelineDate>
+            <TimelineContent variants={timelineContentVariants}>
               <h3>Full Platform Vision</h3>
               <p>Complete AgentBattle.space ecosystem with enhanced UI/UX and comprehensive features.</p>
             </TimelineContent>
